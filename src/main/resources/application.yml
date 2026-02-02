@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: solgit-backend-module
+  
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    
+server:
+  port: 8085
+
+logging:
+  level:
+    com.solgit.backend: INFO
+    org.springframework.amqp: DEBUG

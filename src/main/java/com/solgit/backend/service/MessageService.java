@@ -19,6 +19,7 @@ import java.util.Map;
 public class MessageService {
 
     private final RabbitTemplate rabbitTemplate;
+    private final Map<String, RabbitMQConfig.QueueConfig> queueConfigMap;
     
     @Value("${spring.application.name:solgit-backend-module}")
     private String source;
@@ -94,13 +95,13 @@ public class MessageService {
      */
     private RabbitMQConfig.QueueConfig findQueueConfig(String routingKey) {
         // 정확한 매칭 먼저 시도
-        RabbitMQConfig.QueueConfig config = RabbitMQConfig.QUEUE_CONFIG_MAP.get(routingKey);
+        RabbitMQConfig.QueueConfig config = queueConfigMap.get(routingKey);
         if (config != null) {
             return config;
         }
         
         // 대소문자 구분 없이 매칭 시도
-        for (Map.Entry<String, RabbitMQConfig.QueueConfig> entry : RabbitMQConfig.QUEUE_CONFIG_MAP.entrySet()) {
+        for (Map.Entry<String, RabbitMQConfig.QueueConfig> entry : queueConfigMap.entrySet()) {
             if (entry.getKey().equalsIgnoreCase(routingKey)) {
                 return entry.getValue();
             }

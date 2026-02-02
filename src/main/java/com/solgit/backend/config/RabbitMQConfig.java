@@ -11,21 +11,33 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Configuration
 public class RabbitMQConfig {
 
+    private final QueueConfigProperties queueConfigProperties;
+
+    public RabbitMQConfig(QueueConfigProperties queueConfigProperties) {
+        this.queueConfigProperties = queueConfigProperties;
+    }
+
     // Exchange와 Routing Key 매핑 설정
     // queueType에 따라 다른 exchange와 routing key를 사용할 수 있도록 설정
-    public static final Map<String, QueueConfig> QUEUE_CONFIG_MAP = new HashMap<>();
-    
-    static {
-        // 예시: queueType별로 exchange와 routing key 설정
-        QUEUE_CONFIG_MAP.put("MATTERMOST.NOTI", new QueueConfig("solgit.main.exchange", "mattermost.noti"));
-        QUEUE_CONFIG_MAP.put("MATTERMOST.CREATE", new QueueConfig("solgit.main.exchange", "mattermost.create"));
-        QUEUE_CONFIG_MAP.put("PAYMENT", new QueueConfig("payment.exchange", "payment.routing.key"));
-        QUEUE_CONFIG_MAP.put("NOTIFICATION", new QueueConfig("notification.exchange", "notification.routing.key"));
-        QUEUE_CONFIG_MAP.put("USER", new QueueConfig("user.exchange", "user.routing.key"));
+    @Bean
+    public Map<String, QueueConfig> queueConfigMap() {
+        if (queueConfigProperties.getQueues() == null) {
+            return new HashMap<>();
+        }
+        
+        return queueConfigProperties.getQueues().entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> new QueueConfig(
+                                entry.getValue().getExchange(),
+                                entry.getValue().getRoutingKey()
+                        )
+                ));
     }
 
     @Bean

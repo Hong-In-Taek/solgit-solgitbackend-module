@@ -7,6 +7,20 @@ spring:
     port: 5672
     username: guest
     password: guest
+
+rabbitmq:
+  queues:
+    MATTERMOST.NOTI:
+      exchange: solgit.main.exchange
+      routing-key: mattermost.noti
+    MATTERMOST.CREATE:
+      exchange: solgit.main.exchange
+      routing-key: mattermost.create
+    MATTERMOST.UPDATE:
+      exchange: solgit.main.exchange
+      routing-key: mattermost.update
+
+
     
 server:
   port: 8085

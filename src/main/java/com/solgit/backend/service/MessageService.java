@@ -112,6 +112,6 @@ public class MessageService {
     
     private String getDefaultExchange() {
         // 기본 exchange 이름 (설정 파일에서 가져올 수도 있음)
-        return "publish.exchange";
+        return "solgit.main.exchange";
     }
 }
